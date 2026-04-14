@@ -25,6 +25,9 @@ namespace MMORPG.Data
         /// <summary>기본 공격 사거리.</summary>
         public float attackRange;
 
+        /// <summary>캐릭터 회전 속도 (deg/s, Slerp 계수).</summary>
+        public float rotationSpeed = 10f;
+
         /// <summary>보유 스킬 목록.</summary>
         public List<SkillSO> skills;
 
