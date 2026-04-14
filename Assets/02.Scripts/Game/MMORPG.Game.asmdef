@@ -1,0 +1,21 @@
+{
+  "name": "MMORPG.Game",
+  "rootNamespace": "MMORPG.Game",
+  "references": [
+    "MMORPG.Core",
+    "MMORPG.Data",
+    "Unity.Addressables",
+    "Unity.ResourceManager",
+    "UniTask",
+    "UniTask.Addressables"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
