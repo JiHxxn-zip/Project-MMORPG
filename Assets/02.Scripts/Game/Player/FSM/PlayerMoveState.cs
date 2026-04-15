@@ -32,15 +32,9 @@ namespace MMORPG.Game
             // 이동
             Owner.CC.Move(moveDir * Owner.Data.moveSpeed * Time.deltaTime);
 
-            // 이동 방향으로 회전
+            // 이동 방향으로 즉시 회전
             if (moveDir != Vector3.zero)
-            {
-                Quaternion targetRot = Quaternion.LookRotation(moveDir);
-                Owner.transform.rotation = Quaternion.Slerp(
-                    Owner.transform.rotation,
-                    targetRot,
-                    Owner.Data.rotationSpeed * Time.deltaTime);
-            }
+                Owner.transform.rotation = Quaternion.LookRotation(moveDir);
 
             // 애니메이터 속도 갱신
             float speed = new Vector2(h, v).magnitude;
