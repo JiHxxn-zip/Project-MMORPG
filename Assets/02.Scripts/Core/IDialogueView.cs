@@ -14,7 +14,10 @@ namespace MMORPG.Core
         /// <summary>대화창을 숨긴다.</summary>
         void HideDialogue();
 
-        /// <summary>타이핑 중 스킵 요청 시 호출. 전체 텍스트를 즉시 표시한다.</summary>
-        void SetTypingComplete();
+        /// <summary>타이핑 연출이 진행 중인지 여부.</summary>
+        bool IsTyping { get; }
+
+        /// <summary>타이핑 연출을 즉시 완료하고 전체 텍스트를 표시한다.</summary>
+        void SkipTyping();
     }
 }

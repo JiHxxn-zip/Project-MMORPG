@@ -17,12 +17,42 @@ namespace MMORPG.Game
         public NPCInteractionIndicator Indicator => _indicator;
 
         /// <summary>
-        /// 현재 퀘스트 상태에 맞는 DialogueSO를 반환한다.
-        /// QuestManager 연동 전까지는 항상 defaultDialogue를 반환한다.
+        /// 상호작용 시 재생할 대화와 퀘스트 액션을 반환한다.
+        /// 우선순위: 퀘스트 완료 > TalkToNPC 목표 > 퀘스트 수락 > 기본 대화
         /// </summary>
-        public DialogueSO GetDialogueForCurrentState(QuestProgressState state)
+        public QuestContext GetInteractionContext()
         {
-            return _npcData.defaultDialogue;
+            if (QuestManager.Instance != null)
+            {
+                // 이 NPC가 퀘스트 제공자인 경우
+                if (_npcData.availableQuests != null)
+                {
+                    foreach (var quest in _npcData.availableQuests)
+                    {
+                        var state = QuestManager.Instance.GetState(quest.questId);
+
+                        if (state == QuestProgressState.Active &&
+                            QuestManager.Instance.CanComplete(quest) &&
+                            quest.completeDialogue != null)
+                            return new QuestContext { dialogue = quest.completeDialogue, quest = quest, action = QuestAction.CompleteQuest };
+
+                        if (state == QuestProgressState.Available)
+                            return new QuestContext { dialogue = _npcData.defaultDialogue, quest = quest, action = QuestAction.AcceptQuest };
+                    }
+                }
+
+                // 이 NPC가 TalkToNPC 퀘스트의 목표인 경우
+                var talkQuest = QuestManager.Instance.GetActiveTalkQuest(_npcData.npcId);
+                if (talkQuest != null && !QuestManager.Instance.CanComplete(talkQuest))
+                {
+                    var dialogue = _npcData.questTargetDialogue != null
+                        ? _npcData.questTargetDialogue
+                        : _npcData.defaultDialogue;
+                    return new QuestContext { dialogue = dialogue, quest = talkQuest, action = QuestAction.TalkToNPC };
+                }
+            }
+
+            return new QuestContext { dialogue = _npcData.defaultDialogue, action = QuestAction.None };
         }
     }
 }

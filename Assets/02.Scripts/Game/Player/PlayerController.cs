@@ -18,7 +18,10 @@ namespace MMORPG.Game
         private PlayerStateMachine _stateMachine;
         private Vector3 _velocity;
         private float _currentHp;
-        private NPCController _currentNPC;
+        private NPCController    _currentNPC;
+        private QuestContext     _pendingContext;
+        private DialoguePanel    _activeDialoguePanel;
+        private DialoguePresenter _dialoguePresenter;
 
         // ── 프로퍼티 ──────────────────────────────────────────────────
         public PlayerStateMachine StateMachine    => _stateMachine;
@@ -90,16 +93,55 @@ namespace MMORPG.Game
             if (!Input.GetKeyDown(KeyCode.F)) return;
             if (_currentNPC == null) return;
 
-            var dialogue = _currentNPC.GetDialogueForCurrentState(QuestProgressState.None);
-            if (dialogue == null) return;
+            _pendingContext = _currentNPC.GetInteractionContext();
+            if (_pendingContext.dialogue == null) return;
 
-            UIManager.Instance.OpenPanel<DialoguePanel>(UIPanelType.Dialogue, PanelOpenFlag.KeepPrevious);
-            DialogueSystem.Instance.StartDialogue(dialogue, _currentNPC.Data.portrait);
+            _activeDialoguePanel = UIManager.Instance.OpenPanel<DialoguePanel>(UIPanelType.Dialogue, PanelOpenFlag.KeepPrevious);
+            _dialoguePresenter   = new DialoguePresenter(_activeDialoguePanel, DialogueSystem.Instance);
+            _activeDialoguePanel.SetPresenter(_dialoguePresenter);
+            DialogueSystem.Instance.StartDialogue(_pendingContext.dialogue, _currentNPC.Data.portrait);
             _stateMachine.ChangeState(new PlayerInteractState(_stateMachine));
         }
 
         private void OnDialogueEnded()
         {
+            if (_pendingContext.action == QuestAction.AcceptQuest && _activeDialoguePanel != null)
+            {
+                var quest = _pendingContext.quest;
+                _pendingContext = default;
+
+                _activeDialoguePanel.ShowQuestChoice(
+                    description: quest.description,
+                    onAccept: () =>
+                    {
+                        QuestManager.Instance.AcceptQuest(quest);
+                        _activeDialoguePanel.HideQuestChoice();
+                        if (quest.acceptDialogue != null)
+                            DialogueSystem.Instance.StartDialogue(quest.acceptDialogue, _currentNPC?.Data.portrait);
+                        else
+                            FinishDialogue();
+                    },
+                    onDecline: () => FinishDialogue()
+                );
+            }
+            else
+            {
+                if (_pendingContext.action == QuestAction.CompleteQuest)
+                    QuestManager.Instance.CompleteQuest(_pendingContext.quest);
+                else if (_pendingContext.action == QuestAction.TalkToNPC)
+                    QuestManager.Instance.AddProgress(_pendingContext.quest.questId);
+
+                _pendingContext = default;
+                FinishDialogue();
+            }
+        }
+
+        private void FinishDialogue()
+        {
+            _dialoguePresenter?.Dispose();
+            _dialoguePresenter   = null;
+            _activeDialoguePanel = null;
+            UIManager.Instance.ClosePanel(UIPanelType.Dialogue);
             (_stateMachine.CurrentState as PlayerInteractState)?.EndInteract();
         }
 

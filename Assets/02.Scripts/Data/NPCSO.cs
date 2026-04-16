@@ -21,6 +21,9 @@ namespace MMORPG.Data
         /// <summary>퀘스트 조건과 무관하게 항상 재생되는 기본 대화.</summary>
         public DialogueSO defaultDialogue;
 
+        /// <summary>이 NPC가 TalkToNPC 퀘스트의 목표일 때 재생되는 대화.</summary>
+        public DialogueSO questTargetDialogue;
+
         /// <summary>이 NPC가 제공하는 퀘스트 목록.</summary>
         public List<QuestSO> availableQuests;
     }

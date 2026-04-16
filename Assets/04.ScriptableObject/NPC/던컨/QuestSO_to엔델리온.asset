@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: "\uB358\uCEE8\uD018_1"
   title: "\uC5D4\uB378\uB9AC\uC628\uACFC \uB300\uD654"
-  description: "\uC5D4\uB378\uB9AC\uC628\uACFC \uB300\uD654\uD558\uACE0 \uC624\uC2DC\uAC8C"
+  description: Talk to Endelion
   questType: 1
   targetId: "\uC5D4\uB378\uB9AC\uC628"
   targetCount: 0

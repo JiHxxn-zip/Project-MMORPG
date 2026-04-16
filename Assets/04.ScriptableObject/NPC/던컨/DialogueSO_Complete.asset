@@ -15,6 +15,6 @@ MonoBehaviour:
   dialogueId: "\uB358\uCEE8\uD018_\uC644\uB8CC"
   nodes:
   - speakerName: "\uB358\uCEE8"
-    text: "\uD018\uC2A4\uD2B8 \uC644\uB8CC"
+    text: Quest Complete
     requiredState: 3
     nextDialogueId: 

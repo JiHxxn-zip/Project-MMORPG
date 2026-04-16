@@ -34,7 +34,7 @@ namespace MMORPG.Data
         /// <summary>완료 시 지급될 보상.</summary>
         public QuestReward reward;
 
-        /// <summary>퀘스트 수락 시 재생되는 대화.</summary>
+        /// <summary>NPC가 퀘스트를 제안할 때 재생되는 대화. 대화 종료 후 수락/거절 선택지가 표시된다.</summary>
         public DialogueSO acceptDialogue;
 
         /// <summary>퀘스트 완료 시 재생되는 대화.</summary>

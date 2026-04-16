@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1eed3e83e996f4e45b4da14a6491abb2, type: 3}
-  m_Name: DialogueSO_Accept
+  m_Name: DialogueSO_Target
   m_EditorClassIdentifier: 
-  dialogueId: "\uB358\uCEE8\uD018_\uC218\uB77D"
+  dialogueId: 112
   nodes:
   - speakerName: "\uB358\uCEE8"
-    text: Thankyou for Accept
+    text: Oh. Hi
     requiredState: 0
     nextDialogueId: 
