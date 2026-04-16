@@ -8,7 +8,8 @@
     "Unity.ResourceManager",
     "UniTask",
     "UniTask.Addressables",
-    "Cinemachine"
+    "Cinemachine",
+    "Unity.TextMeshPro"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

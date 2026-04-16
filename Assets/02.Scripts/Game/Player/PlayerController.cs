@@ -18,6 +18,7 @@ namespace MMORPG.Game
         private PlayerStateMachine _stateMachine;
         private Vector3 _velocity;
         private float _currentHp;
+        private NPCController _currentNPC;
 
         // ── 프로퍼티 ──────────────────────────────────────────────────
         public PlayerStateMachine StateMachine    => _stateMachine;
@@ -49,20 +50,57 @@ namespace MMORPG.Game
         /// <summary>점프 등 외부에서 Y velocity를 직접 제어할 때 사용한다.</summary>
         public void SetVelocityY(float y) => _velocity.y = y;
 
+        public void SetCurrentNPC(NPCController npc) => _currentNPC = npc;
+        public void ClearCurrentNPC() => _currentNPC = null;
+
         // ── Unity 생명주기 ────────────────────────────────────────────
+
+        private void OnEnable()  => PlayerRegistry.Register(this);
+        private void OnDisable() => PlayerRegistry.Unregister(this);
 
         private void Awake()
         {
-            _cc         = GetComponent<CharacterController>();  // Awake 한 번만 캐싱
-            _currentHp  = _playerData.maxHp;
+            _cc           = GetComponent<CharacterController>();
+            _currentHp    = _playerData.maxHp;
             _stateMachine = new PlayerStateMachine(this);
             _stateMachine.ChangeState(new PlayerIdleState(_stateMachine));
+        }
+
+        private void Start()
+        {
+            DialogueSystem.Instance.OnDialogueEnded += OnDialogueEnded;
+        }
+
+        private void OnDestroy()
+        {
+            if (DialogueSystem.Instance != null)
+                DialogueSystem.Instance.OnDialogueEnded -= OnDialogueEnded;
         }
 
         private void Update()
         {
             _stateMachine.Update();
             ApplyGravity();
+            HandleInteractInput();
+        }
+
+        private void HandleInteractInput()
+        {
+            if (_stateMachine.CurrentState is PlayerInteractState) return;
+            if (!Input.GetKeyDown(KeyCode.F)) return;
+            if (_currentNPC == null) return;
+
+            var dialogue = _currentNPC.GetDialogueForCurrentState(QuestProgressState.None);
+            if (dialogue == null) return;
+
+            UIManager.Instance.OpenPanel<DialoguePanel>(UIPanelType.Dialogue, PanelOpenFlag.KeepPrevious);
+            DialogueSystem.Instance.StartDialogue(dialogue, _currentNPC.Data.portrait);
+            _stateMachine.ChangeState(new PlayerInteractState(_stateMachine));
+        }
+
+        private void OnDialogueEnded()
+        {
+            (_stateMachine.CurrentState as PlayerInteractState)?.EndInteract();
         }
 
         private void ApplyGravity()

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1605fd1a70e256747912ea90bf25a8fd, type: 3}
+  m_Name: "NPCSO_\uB358\uCEE8"
+  m_EditorClassIdentifier: 
+  npcId: "\uB358\uCEE8"
+  npcName: "\uB358\uCEE8"
+  portrait: {fileID: 0}
+  defaultDialogue: {fileID: 11400000, guid: 0110d8e24232b7241aca7c7c4f7e45b9, type: 2}
+  availableQuests:
+  - {fileID: 11400000, guid: ab05097d84dbab34db3c5c591a8d3101, type: 2}
