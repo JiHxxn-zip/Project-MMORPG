@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: New UI Panel Data SO
   m_EditorClassIdentifier: 
   _entries:
-  - panelType: 2
-    prefab: {fileID: 0}
+  - panelType: 3
+    prefab: {fileID: 2411152306623979786, guid: 5fd62cab331dcbe429809c2675b597e6,
+      type: 3}
