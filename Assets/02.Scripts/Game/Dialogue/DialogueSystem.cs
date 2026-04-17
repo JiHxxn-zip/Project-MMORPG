@@ -23,26 +23,29 @@ namespace MMORPG.Game
         public event Action<DialogueNode> OnNodeChanged;
         public event Action               OnDialogueEnded;
 
-        /// <summary>대화를 시작한다.</summary>
+        /// <summary>대화를 시작한다. state가 None이면 첫 번째 None 노드부터, 아니면 state와 일치하는 섹션 헤더 노드부터 재생한다.</summary>
         public void StartDialogue(DialogueSO dialogue, Sprite portrait = null, QuestProgressState state = QuestProgressState.None)
         {
             CurrentPortrait   = portrait;
             _currentDialogue  = dialogue;
 
-            int firstIndex = FindValidNodeIndex(0, state);
+            int firstIndex = FindSectionStartIndex(state);
             if (firstIndex < 0) { EndDialogue(); return; }
 
             _currentNodeIndex = firstIndex;
             OnNodeChanged?.Invoke(_currentDialogue.nodes[_currentNodeIndex]);
         }
 
-        /// <summary>다음 유효 노드로 이동한다. 없으면 대화를 종료한다.</summary>
+        /// <summary>다음 노드로 이동한다. requiredState != None인 노드는 섹션 경계로 보고 대화를 종료한다.</summary>
         public void Next()
         {
             if (!IsActive) return;
 
-            int nextIndex = FindValidNodeIndex(_currentNodeIndex + 1, QuestProgressState.None);
-            if (nextIndex < 0) { EndDialogue(); return; }
+            int nextIndex = _currentNodeIndex + 1;
+            if (nextIndex >= _currentDialogue.nodes.Count) { EndDialogue(); return; }
+
+            var next = _currentDialogue.nodes[nextIndex];
+            if (next.requiredState != QuestProgressState.None) { EndDialogue(); return; }
 
             _currentNodeIndex = nextIndex;
             OnNodeChanged?.Invoke(_currentDialogue.nodes[_currentNodeIndex]);
@@ -55,14 +58,19 @@ namespace MMORPG.Game
             OnDialogueEnded?.Invoke();
         }
 
-        /// <summary>startIndex부터 조건에 맞는 첫 번째 노드 인덱스를 반환한다. 없으면 -1.</summary>
-        private int FindValidNodeIndex(int startIndex, QuestProgressState state)
+        /// <summary>
+        /// state에 해당하는 섹션의 시작 인덱스를 반환한다. 없으면 -1.
+        /// state=None이면 첫 번째 None 노드, 아니면 requiredState가 state와 정확히 일치하는 첫 노드를 찾는다.
+        /// </summary>
+        private int FindSectionStartIndex(QuestProgressState state)
         {
             if (_currentDialogue == null) return -1;
-            for (int i = startIndex; i < _currentDialogue.nodes.Count; i++)
+            for (int i = 0; i < _currentDialogue.nodes.Count; i++)
             {
                 var node = _currentDialogue.nodes[i];
-                if (node.requiredState == QuestProgressState.None || node.requiredState == state)
+                if (state == QuestProgressState.None && node.requiredState == QuestProgressState.None)
+                    return i;
+                if (state != QuestProgressState.None && node.requiredState == state)
                     return i;
             }
             return -1;

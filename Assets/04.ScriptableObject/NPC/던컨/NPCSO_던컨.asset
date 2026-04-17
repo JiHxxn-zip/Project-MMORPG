@@ -16,7 +16,6 @@ MonoBehaviour:
   npcName: "\uB358\uCEE8"
   portrait: {fileID: 0}
   defaultDialogue: {fileID: 11400000, guid: 0110d8e24232b7241aca7c7c4f7e45b9, type: 2}
-  questTargetDialogue: {fileID: 11400000, guid: b0f20eb79fbb5d74faa966381ffc490b,
-    type: 2}
+  questTargetDialogue: {fileID: 0}
   availableQuests:
   - {fileID: 11400000, guid: ab05097d84dbab34db3c5c591a8d3101, type: 2}

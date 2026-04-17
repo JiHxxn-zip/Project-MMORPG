@@ -9,8 +9,9 @@ namespace MMORPG.Game
 {
     public struct QuestContext
     {
-        public DialogueSO dialogue;
-        public QuestSO    quest;    // None 액션일 때는 null
-        public QuestAction action;
+        public DialogueSO        dialogue;
+        public QuestSO           quest;         // None 액션일 때는 null
+        public QuestAction       action;
+        public QuestProgressState dialogueState; // StartDialogue에 넘길 섹션 state
     }
 }

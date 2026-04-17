@@ -33,8 +33,8 @@ namespace MMORPG.Game
             if (quest == null) return false;
             return quest.questType switch
             {
-                QuestType.KillMonster => GetProgress(quest.questId) >= quest.targetCount,
-                QuestType.TalkToNPC   => GetProgress(quest.questId) >= quest.targetCount,
+                QuestType.KillMonster => quest.targetCount > 0 && GetProgress(quest.questId) >= quest.targetCount,
+                QuestType.TalkToNPC   => quest.targetCount > 0 && GetProgress(quest.questId) >= quest.targetCount,
                 QuestType.CollectItem => false, // TODO: Inventory 연동
                 _                     => false
             };
@@ -58,6 +58,8 @@ namespace MMORPG.Game
         public void AcceptQuest(QuestSO quest)
         {
             if (quest == null) return;
+            if (string.IsNullOrEmpty(quest.questId)) { Debug.LogWarning($"[QuestManager] questId가 비어있는 퀘스트 수락 시도: {quest.title}"); return; }
+            if (GetState(quest.questId) != QuestProgressState.Available) return;
             _questData[quest.questId]  = quest;
             _states[quest.questId]     = QuestProgressState.Active;
             Debug.Log($"[QuestManager] 수락: {quest.title}");
@@ -74,6 +76,8 @@ namespace MMORPG.Game
         public void CompleteQuest(QuestSO quest)
         {
             if (quest == null) return;
+            if (string.IsNullOrEmpty(quest.questId)) { Debug.LogWarning($"[QuestManager] questId가 비어있는 퀘스트 완료 시도: {quest.title}"); return; }
+            if (GetState(quest.questId) == QuestProgressState.Completed) return;
             _states[quest.questId] = QuestProgressState.Completed;
             GrantReward(quest.reward);
             Debug.Log($"[QuestManager] 완료: {quest.title}");

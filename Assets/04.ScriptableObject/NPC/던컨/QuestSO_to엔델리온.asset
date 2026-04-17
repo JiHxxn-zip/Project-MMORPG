@@ -17,7 +17,7 @@ MonoBehaviour:
   description: Talk to Endelion
   questType: 1
   targetId: "\uC5D4\uB378\uB9AC\uC628"
-  targetCount: 0
+  targetCount: 1
   prerequisiteQuestId: 
   reward:
     exp: 10

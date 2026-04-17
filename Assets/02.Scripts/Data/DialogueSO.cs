@@ -34,8 +34,5 @@ namespace MMORPG.Data
 
         /// <summary>이 노드가 표시되기 위한 퀘스트 진행 상태 조건. None이면 조건 없음.</summary>
         public QuestProgressState requiredState;
-
-        /// <summary>다음으로 이어질 DialogueSO의 dialogueId. 비어 있으면 대화 종료.</summary>
-        public string nextDialogueId;
     }
 }
