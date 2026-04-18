@@ -1,6 +1,7 @@
 /// <summary>
 /// 퀘스트 런타임 상태를 관리하는 싱글턴 매니저.
-/// 정의 데이터(QuestSO)는 수락 시 캐싱하고, 진행 상태와 카운트는 내부 Dictionary에 보관한다.
+/// 정의 데이터(QuestSO)는 수락 시 캐싱하고, 진행 상태는 내부 Dictionary에 보관한다.
+/// 진행도 카운트는 QuestConditionData.currentCount 에서 직접 읽는다.
 /// </summary>
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,42 @@ namespace MMORPG.Game
 {
     public class QuestManager : SingletonManager<QuestManager>
     {
-        private readonly Dictionary<string, QuestSO>            _questData     = new();
-        private readonly Dictionary<string, QuestProgressState> _states        = new();
-        private readonly Dictionary<string, int>                _progressCount = new();
+        private readonly Dictionary<string, QuestSO>            _questData = new();
+        private readonly Dictionary<string, QuestProgressState> _states    = new();
 
         public event Action<QuestSO> OnQuestAccepted;
         public event Action<QuestSO> OnQuestCompleted;
+
+        // ── 이벤트 버스 구독 ───────────────────────────────────────────
+
+        private void OnEnable()  => GameEventBus.OnEvent += HandleEvent;
+        private void OnDisable() => GameEventBus.OnEvent -= HandleEvent;
+
+        private void HandleEvent(GameEvent e)
+        {
+            foreach (var quest in GetActiveQuests())
+            {
+                if (quest.conditions == null || quest.conditions.Count == 0) continue;  // #1 null 가드
+
+                foreach (var cond in quest.conditions)
+                {
+                    if (cond.eventType != e.Type)     continue;
+                    if (cond.targetId  != e.TargetId) continue;
+
+                    cond.currentCount += e.Value;
+                    Debug.Log($"[QuestManager] 진행도: {quest.questId} | {cond.eventType}:{cond.targetId} → {cond.currentCount}/{cond.requiredCount}");
+
+                    if (quest.IsAllMet) CompleteQuest(quest);
+                }
+            }
+        }
+
+        private IEnumerable<QuestSO> GetActiveQuests()
+        {
+            foreach (var quest in _questData.Values)
+                if (GetState(quest.questId) == QuestProgressState.Active)
+                    yield return quest;
+        }
 
         // ── 상태 조회 ─────────────────────────────────────────────────
 
@@ -25,30 +56,35 @@ namespace MMORPG.Game
         public QuestProgressState GetState(string questId)
             => _states.TryGetValue(questId, out var state) ? state : QuestProgressState.Available;
 
-        public int GetProgress(string questId)
-            => _progressCount.TryGetValue(questId, out var count) ? count : 0;
-
-        public bool CanComplete(QuestSO quest)
+        /// <summary>
+        /// 퀘스트 전체 진행도 합산 (트래커 UI용).
+        /// 단일 조건 퀘스트는 그대로 사용 가능. 다중 조건은 QuestSO.conditions 를 직접 참조.
+        /// </summary>
+        public int GetProgress(string questId)  // #3 conditions 기반
         {
-            if (quest == null) return false;
-            return quest.questType switch
-            {
-                QuestType.KillMonster => quest.targetCount > 0 && GetProgress(quest.questId) >= quest.targetCount,
-                QuestType.TalkToNPC   => quest.targetCount > 0 && GetProgress(quest.questId) >= quest.targetCount,
-                QuestType.CollectItem => false, // TODO: Inventory 연동
-                _                     => false
-            };
+            if (!_questData.TryGetValue(questId, out var quest) || quest.conditions == null)
+                return 0;
+            int total = 0;
+            foreach (var cond in quest.conditions)
+                total += cond.currentCount;
+            return total;
         }
 
+        public bool CanComplete(QuestSO quest) => quest != null && quest.IsAllMet;
+
         /// <summary>이 npcId를 목표로 하는 Active 상태의 TalkToNPC 퀘스트를 반환한다.</summary>
-        public QuestSO GetActiveTalkQuest(string npcId)
+        public QuestSO GetActiveTalkQuest(string npcId)  // #4 conditions 기반
         {
             foreach (var quest in _questData.Values)
             {
-                if (quest.questType             != QuestType.TalkToNPC)          continue;
-                if (quest.targetId              != npcId)                         continue;
-                if (GetState(quest.questId)     != QuestProgressState.Active)     continue;
-                return quest;
+                if (GetState(quest.questId) != QuestProgressState.Active) continue;
+                if (quest.conditions == null) continue;
+
+                foreach (var cond in quest.conditions)
+                {
+                    if (cond.eventType == GameEventType.NpcTalked && cond.targetId == npcId)
+                        return quest;
+                }
             }
             return null;
         }
@@ -60,17 +96,19 @@ namespace MMORPG.Game
             if (quest == null) return;
             if (string.IsNullOrEmpty(quest.questId)) { Debug.LogWarning($"[QuestManager] questId가 비어있는 퀘스트 수락 시도: {quest.title}"); return; }
             if (GetState(quest.questId) != QuestProgressState.Available) return;
-            _questData[quest.questId]  = quest;
-            _states[quest.questId]     = QuestProgressState.Active;
+
+            // #5 선행 퀘스트 체크
+            if (!string.IsNullOrEmpty(quest.prerequisiteQuestId) &&
+                GetState(quest.prerequisiteQuestId) != QuestProgressState.Completed)
+            {
+                Debug.LogWarning($"[QuestManager] 선행 퀘스트 미완료로 수락 불가: {quest.title} (requires: {quest.prerequisiteQuestId})");
+                return;
+            }
+
+            _questData[quest.questId] = quest;
+            _states[quest.questId]    = QuestProgressState.Active;
             Debug.Log($"[QuestManager] 수락: {quest.title}");
             OnQuestAccepted?.Invoke(quest);
-        }
-
-        public void AddProgress(string questId, int amount = 1)
-        {
-            if (GetState(questId) != QuestProgressState.Active) return;
-            _progressCount[questId] = GetProgress(questId) + amount;
-            Debug.Log($"[QuestManager] 진행도: {questId} → {GetProgress(questId)}");
         }
 
         public void CompleteQuest(QuestSO quest)

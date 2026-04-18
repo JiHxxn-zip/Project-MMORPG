@@ -87,17 +87,8 @@ namespace MMORPG.Game
             }
             else
             {
-                if (_pendingContext.action == QuestAction.CompleteQuest)
-                {
-                    QuestManager.Instance.CompleteQuest(_pendingContext.quest);
-                }
-                else if (_pendingContext.action == QuestAction.TalkToNPC)
-                {
-                    var quest = _pendingContext.quest;
-                    QuestManager.Instance.AddProgress(quest.questId);
-                    if (QuestManager.Instance.CanComplete(quest))
-                        QuestManager.Instance.CompleteQuest(quest);
-                }
+                if (_pendingContext.action == QuestAction.TalkToNPC)
+                    GameEventPublisher.NpcTalked(_currentNPC.Data.npcId);
 
                 _pendingContext = default;
                 FinishDialogue();

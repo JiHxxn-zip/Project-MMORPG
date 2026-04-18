@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: "\uB358\uCEE8\uD018_1"
   title: "\uC5D4\uB378\uB9AC\uC628\uACFC \uB300\uD654"
-  description: Talk to Endelion
+  description: "\uC5D4\uB378\uB9AC\uC628\uC5D0\uAC8C \uC774 \uB9D0\uC744 \uC804\uD574\uC8FC\uACA0\uB098?"
   questType: 1
   targetId: "\uC5D4\uB378\uB9AC\uC628"
   targetCount: 1
@@ -23,5 +23,8 @@ MonoBehaviour:
     exp: 10
     gold: 100
     itemId: 12
-  acceptDialogue: {fileID: 11400000, guid: fea6da284d287aa499c42d1c8010ef77, type: 2}
-  completeDialogue: {fileID: 11400000, guid: 0cd87aa8bc34c154facdeb79848e07d9, type: 2}
+  dialogue: {fileID: 11400000, guid: fea6da284d287aa499c42d1c8010ef77, type: 2}
+  conditions:
+  - eventType: 2
+    targetId: "\uC5D4\uB378\uB9AC\uC628"
+    requiredCount: 1

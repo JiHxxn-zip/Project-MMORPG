@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eed3e83e996f4e45b4da14a6491abb2, type: 3}
   m_Name: "DialogueSO_\uB358\uCEE8\uD018 \uB300\uD654"
   m_EditorClassIdentifier: 
-  dialogueId: "\uB358\uCEE8\uD018_\uC218\uB77D"
+  dialogueId: "\uB358\uCEE8\uD018_\uB300\uD654"
   nodes:
   - speakerName: "\uB358\uCEE8"
-    text: Thankyou for Accept
-    requiredState: 0
+    text: "\uD018\uC2A4\uD2B8 \uC218\uB77D\uD588\uAD70! \uC798 \uBD80\uD0C1\uD558\uB124."
+    requiredState: 1
   - speakerName: "\uB358\uCEE8"
-    text: Thankyou for Accept
-    requiredState: 0
+    text: "\uC544\uC9C1 \uC5D4\uB378\uB9AC\uC628\uC744 \uB9CC\uB098\uC9C0 \uC54A\uC558\uB098?"
+    requiredState: 2
   - speakerName: "\uB358\uCEE8"
-    text: Thankyou for Accept
-    requiredState: 0
-  - speakerName: "\uB358\uCEE8"
-    text: Thankyou for Accept
-    requiredState: 0
+    text: "\uACE0\uB9D9\uB124! \uC57D\uC18D\uD55C \uBCF4\uC0C1\uC77C\uC138"
+    requiredState: 3

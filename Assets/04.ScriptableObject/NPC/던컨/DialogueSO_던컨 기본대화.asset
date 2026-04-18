@@ -15,10 +15,8 @@ MonoBehaviour:
   dialogueId: "\uB358\uCEE8_1"
   nodes:
   - speakerName: "\uB358\uCEE8"
-    text: Hello
+    text: "\uC548\uB155\uD558\uC2DC\uC624"
     requiredState: 0
-    nextDialogueId: "\uB358\uCEE8_2"
   - speakerName: "\uB358\uCEE8"
-    text: I'm Dankan
+    text: "\uB098\uB294 \uB358\uCEE8\uC77C\uC138."
     requiredState: 0
-    nextDialogueId: 

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using MMORPG.Core;
 
@@ -39,5 +41,13 @@ namespace MMORPG.Data
         /// requiredState=Available → 수락 후 재생, Completed → 완료 대화, Active → TalkToNPC 목표 대화.
         /// </summary>
         public DialogueSO dialogue;
+
+        /// <summary>이벤트 버스 기반 퀘스트 조건 목록. 모든 조건이 충족되면 완료 가능.</summary>
+        public List<QuestConditionData> conditions;
+
+        /// <summary>conditions가 모두 달성되었는지 확인한다.</summary>
+        public bool IsAllMet => conditions != null
+                             && conditions.Count > 0
+                             && conditions.All(c => c.currentCount >= c.requiredCount);
     }
 }
