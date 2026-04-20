@@ -9,12 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd3abf86f6f7b994584dc935d822fa89, type: 3}
-  m_Name: PlayerSO
+  m_Script: {fileID: 11500000, guid: 5692f7b47d51f6d42957d8bb3765ae3b, type: 3}
+  m_Name: CharacterStatSO
   m_EditorClassIdentifier: 
-  characterName: Warrior
-  stat: {fileID: 11400000, guid: 38c03938ed3195648a5a69435ab4b055, type: 2}
-  attackRange: 0
-  rotationSpeed: 2
-  skills: []
-  portrait: {fileID: 0}
+  maxHp: 500
+  attackPower: 10
+  defense: 10
+  magicResist: 10
+  luck: 10
+  critMultiplier: 1.5
+  moveSpeed: 15
+  expReward: 0

@@ -30,7 +30,7 @@ namespace MMORPG.Game
             Vector3 moveDir = (camForward * v + camRight * h).normalized;
 
             // 이동
-            Owner.CC.Move(moveDir * Owner.Data.moveSpeed * Time.deltaTime);
+            Owner.CC.Move(moveDir * Owner.Data.stat.moveSpeed * Time.deltaTime);
 
             // 이동 방향으로 즉시 회전
             if (moveDir != Vector3.zero)

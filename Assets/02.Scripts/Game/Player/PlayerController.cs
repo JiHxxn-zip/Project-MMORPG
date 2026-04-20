@@ -1,16 +1,14 @@
 /// <summary>
-/// 플레이어 진입점. CharacterController 래핑, FSM 소유, 중력 처리, IDamageable 구현을 담당한다.
+/// 플레이어 진입점. CharacterController 래핑, FSM 소유, 중력 처리를 담당한다.
 /// 대화·퀘스트 인터랙션 로직은 PlayerInteractionHandler에 위임한다.
 /// </summary>
-using System;
 using UnityEngine;
-using MMORPG.Core;
 using MMORPG.Data;
 
 namespace MMORPG.Game
 {
     [RequireComponent(typeof(PlayerInteractionHandler))]
-    public class PlayerController : MonoBehaviour, IDamageable
+    public class PlayerController : MonoBehaviour
     {
         [SerializeField] private PlayerSO      _playerData;
         [SerializeField] private PlayerAnimator _animator;
@@ -20,7 +18,6 @@ namespace MMORPG.Game
         private PlayerStateMachine       _stateMachine;
         private PlayerInteractionHandler _interactionHandler;
         private Vector3 _velocity;
-        private float   _currentHp;
 
         // ── 프로퍼티 ──────────────────────────────────────────────────
         public PlayerStateMachine  StateMachine    => _stateMachine;
@@ -29,22 +26,6 @@ namespace MMORPG.Game
         public CharacterController CC              => _cc;
         public Transform           CameraTransform => _cameraTransform;
         public bool                IsGrounded      => _cc.isGrounded;
-
-        // ── 이벤트 ────────────────────────────────────────────────────
-        public event Action<float, float> OnHpChanged;  // (currentHp, maxHp)
-        public event Action               OnDead;
-
-        // ── IDamageable ───────────────────────────────────────────────
-        public bool IsDead => _currentHp <= 0f;
-
-        public void TakeDamage(float amount)
-        {
-            if (IsDead) return;
-            _currentHp = Mathf.Max(0f, _currentHp - amount);
-            OnHpChanged?.Invoke(_currentHp, _playerData.maxHp);
-
-            // TODO(전투 Step): _currentHp <= 0 시 DeadState로 전환
-        }
 
         // ── 외부 제어 ─────────────────────────────────────────────────
 
@@ -64,7 +45,6 @@ namespace MMORPG.Game
         {
             _cc                 = GetComponent<CharacterController>();
             _interactionHandler = GetComponent<PlayerInteractionHandler>();
-            _currentHp          = _playerData.maxHp;
             _stateMachine       = new PlayerStateMachine(this);
             _stateMachine.ChangeState(new PlayerIdleState(_stateMachine));
         }
