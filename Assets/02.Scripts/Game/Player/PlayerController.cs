@@ -8,6 +8,8 @@ using MMORPG.Data;
 namespace MMORPG.Game
 {
     [RequireComponent(typeof(PlayerInteractionHandler))]
+    [RequireComponent(typeof(Character))]
+    [RequireComponent(typeof(StatHandler))]
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private PlayerSO      _playerData;
