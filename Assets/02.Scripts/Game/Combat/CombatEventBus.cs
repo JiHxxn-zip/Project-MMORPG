@@ -5,6 +5,7 @@ namespace MMORPG.Game
 {
     public static class CombatEventBus
     {
+        // 데미지 폰트 이펙트 사운드 등
         public static event Action<DamageTakenEvent> OnDamageTaken;
 
         public static void Publish(DamageTakenEvent e)

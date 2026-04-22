@@ -30,6 +30,7 @@ namespace MMORPG.Data
         public string speakerName;
 
         /// <summary>표시될 대사 내용.</summary>
+        [TextArea(2,10)] 
         public string text;
 
         /// <summary>이 노드가 표시되기 위한 퀘스트 진행 상태 조건. None이면 조건 없음.</summary>

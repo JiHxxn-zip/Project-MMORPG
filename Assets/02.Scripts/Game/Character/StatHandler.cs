@@ -16,6 +16,7 @@ namespace MMORPG.Game
 
         public event Action<float, float> OnHpChanged;  // (currentHp, maxHp)
         public event Action               OnDead;
+        public event Action               OnHit;        // 피격 시 (사망 제외)
 
         private void Awake() => _currentHp = _stat.maxHp;
 
@@ -24,6 +25,7 @@ namespace MMORPG.Game
             if (IsDead) return;
             _currentHp = Mathf.Clamp(_currentHp + delta, 0f, _stat.maxHp);
             OnHpChanged?.Invoke(_currentHp, _stat.maxHp);
+            if (delta < 0f && !IsDead) OnHit?.Invoke();
             if (IsDead) OnDead?.Invoke();
         }
     }

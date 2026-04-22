@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5692f7b47d51f6d42957d8bb3765ae3b, type: 3}
   m_Name: CharacterStatSO
   m_EditorClassIdentifier: 
-  maxHp: 10
+  maxHp: 100
   attackPower: 2
   defense: 0
   magicResist: 0
   luck: 0
   critMultiplier: 1.5
   moveSpeed: 2
-  expReward: 5

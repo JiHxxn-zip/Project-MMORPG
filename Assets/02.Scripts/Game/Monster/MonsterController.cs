@@ -10,96 +10,72 @@ namespace MMORPG.Game
     {
         [SerializeField] private MonsterSO _data;
 
-        private enum State { Idle, Chase, Attack, Dead }
+        private Character           _character;
+        private StatHandler         _statHandler;
+        private DamagePipeline      _pipeline;
+        private MonsterStateMachine _stateMachine;
 
-        private Character      _character;
-        private StatHandler    _statHandler;
-        private DamagePipeline _pipeline;
-
-        private State     _state = State.Idle;
-        private float     _attackTimer;
-        private Transform _playerTransform;
+        // ── FSM이 읽는 프로퍼티 ───────────────────────────────────────
+        public MonsterSO  Data            => _data;
+        public Transform  PlayerTransform { get; private set; }
 
         // ── Unity 생명주기 ────────────────────────────────────────────
 
         private void Awake()
         {
-            _character   = GetComponent<Character>();
-            _statHandler = GetComponent<StatHandler>();
-            _pipeline    = new DamagePipeline();
+            _character    = GetComponent<Character>();
+            _statHandler  = GetComponent<StatHandler>();
+            _pipeline     = new DamagePipeline();
+            _stateMachine = new MonsterStateMachine(this);
 
             _statHandler.OnDead += OnDead;
+            _statHandler.OnHit  += OnHit;
+        }
+
+        private void Start()
+        {
+            _stateMachine.ChangeState(new MonsterIdleState(_stateMachine));
         }
 
         private void Update()
         {
-            if (_state == State.Dead) return;
+            PlayerTransform = PlayerRegistry.Player != null
+                ? PlayerRegistry.Player.transform
+                : null;
 
-            _playerTransform = GetPlayerTransform();
-
-            switch (_state)
-            {
-                case State.Idle:   UpdateIdle();   break;
-                case State.Chase:  UpdateChase();  break;
-                case State.Attack: UpdateAttack(); break;
-            }
+            _stateMachine.Update();
         }
 
-        // ── 상태별 업데이트 ───────────────────────────────────────────
-
-        private void UpdateIdle()
+        private void OnDestroy()
         {
-            if (_playerTransform == null) return;
-
-            if (DistToPlayer() <= _data.detectionRange)
-                ChangeState(State.Chase);
+            _statHandler.OnDead -= OnDead;
+            _statHandler.OnHit  -= OnHit;
         }
 
-        private void UpdateChase()
+        // ── 공격 (AttackState에서 호출) ───────────────────────────────
+
+        public void PerformAttack()
         {
-            if (_playerTransform == null) { ChangeState(State.Idle); return; }
-
-            float dist = DistToPlayer();
-
-            if (dist > _data.detectionRange) { ChangeState(State.Idle);   return; }
-            if (dist <= _data.attackRange)   { ChangeState(State.Attack); return; }
-
-            Vector3 dir = (_playerTransform.position - transform.position).normalized;
-            transform.position += dir * _data.stat.moveSpeed * Time.deltaTime;
-            transform.LookAt(_playerTransform);
-        }
-
-        private void UpdateAttack()
-        {
-            if (_playerTransform == null) { ChangeState(State.Idle); return; }
-
-            if (DistToPlayer() > _data.attackRange) { ChangeState(State.Chase); return; }
-
-            transform.LookAt(_playerTransform);
-
-            _attackTimer -= Time.deltaTime;
-            if (_attackTimer > 0f) return;
-
-            _attackTimer = _data.attackCooldown;
-            PerformAttack();
-        }
-
-        // ── 공격 ──────────────────────────────────────────────────────
-
-        private void PerformAttack()
-        {
-            var playerCharacter = _playerTransform.GetComponent<Character>();
+            if (PlayerTransform == null) return;
+            var playerCharacter = PlayerTransform.GetComponent<Character>();
             if (playerCharacter == null) return;
 
-            _pipeline.Execute(_character, playerCharacter,
-                              _data.stat.attackPower, DamageType.Physical);
+            _pipeline.Execute(_character, playerCharacter, _data.stat.attackPower, DamageType.Physical);
         }
 
-        // ── 사망 ──────────────────────────────────────────────────────
+        // ── 유틸 ─────────────────────────────────────────────────────
+
+        public float DistToPlayer() =>
+            PlayerTransform == null
+                ? float.MaxValue
+                : Vector3.Distance(transform.position, PlayerTransform.position);
+
+        // ── 이벤트 핸들러 ─────────────────────────────────────────────
 
         private void OnDead()
         {
-            ChangeState(State.Dead);
+            _statHandler.OnDead -= OnDead;
+            _statHandler.OnHit  -= OnHit;
 
             GameEventBus.Publish(new GameEvent
             {
@@ -108,34 +84,30 @@ namespace MMORPG.Game
                 Value    = 1
             });
 
+            _stateMachine.ChangeState(new MonsterDeadState(_stateMachine));
             Destroy(gameObject, 2f);
+        }
+
+        private void OnHit()
+        {
+            // 이미 넉백/사망 중이면 무시
+            if (_stateMachine.CurrentState is MonsterKnockbackState) return;
+            if (_stateMachine.CurrentState is MonsterDeadState)       return;
+
+            Vector3 knockDir = PlayerTransform != null
+                ? (transform.position - PlayerTransform.position).normalized
+                : Vector3.back;
+
+            _stateMachine.ChangeState(new MonsterKnockbackState(_stateMachine, knockDir, force: 3f));
         }
 
         // ── IInteractable ─────────────────────────────────────────────
 
         public void OnInteract()
         {
-            if (_state == State.Dead) return;
+            if (_stateMachine.CurrentState is MonsterDeadState) return;
 
             TargetingSystem.Instance.SetTarget(_character);
         }
-
-        // ── 유틸 ──────────────────────────────────────────────────────
-
-        private void ChangeState(State next)
-        {
-            if (_state == next) return;
-            _state = next;
-
-            if (_state == State.Attack)
-                _attackTimer = 0f;
-        }
-
-        private float DistToPlayer() =>
-            _playerTransform == null ? float.MaxValue :
-            Vector3.Distance(transform.position, _playerTransform.position);
-
-        private Transform GetPlayerTransform() =>
-            PlayerRegistry.Player != null ? PlayerRegistry.Player.transform : null;
     }
 }

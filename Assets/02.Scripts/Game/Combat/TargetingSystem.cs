@@ -26,6 +26,7 @@ namespace MMORPG.Game
 
         public Character CurrentTarget { get; private set; }
 
+        // 타겟 마커/포커스 이펙트 or 스킬 사거리 체크
         public event Action<Character> OnTargetChanged;
 
         public void SetTarget(Character target)

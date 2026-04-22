@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using MMORPG.Core;
 
 namespace MMORPG.Data
 {
@@ -19,16 +18,8 @@ namespace MMORPG.Data
         public string title;
 
         /// <summary>퀘스트 설명 텍스트.</summary>
+        [TextArea(4,10)] 
         public string description;
-
-        /// <summary>퀘스트 목표 종류.</summary>
-        public QuestType questType;
-
-        /// <summary>목표 대상 ID (IQuestTarget.TargetId 와 대조됨).</summary>
-        public string targetId;
-
-        /// <summary>목표 달성에 필요한 수량.</summary>
-        public int targetCount;
 
         /// <summary>선행 퀘스트 ID. 비어 있으면 선행 조건 없음.</summary>
         public string prerequisiteQuestId;
