@@ -14,13 +14,15 @@ namespace MMORPG.Game
         [SerializeField] private DamageType _damageType = DamageType.Physical;
 
         private Character          _owner;
+        private bool               _isPlayerWeapon;
         private DamagePipeline     _pipeline;
         private Collider           _col;
         private HashSet<Collider>  _hitBuffer;   // 한 스윙에 같은 대상 중복 처리 방지
 
         private void Awake()
         {
-            _owner     = GetComponentInParent<Character>();
+            _owner          = GetComponentInParent<Character>();
+            _isPlayerWeapon = GetComponentInParent<PlayerController>() != null;
             _pipeline  = new DamagePipeline();
             _hitBuffer = new HashSet<Collider>();
             _col       = GetComponent<Collider>();
@@ -52,8 +54,18 @@ namespace MMORPG.Game
             if (defender == null || defender == _owner) return;
 
             _hitBuffer.Add(other);
-            _pipeline.Execute(_owner, defender, _owner.AttackPower, _damageType);
+            var result = _pipeline.Execute(_owner, defender, _owner.AttackPower, _damageType);
             DisableHit();
+
+            if (_isPlayerWeapon)
+            {
+                CombatFeedbackBus.Publish(new CombatFeedbackEvent
+                {
+                    ShakeAmplitude  = result.IsCritical ? 1.8f : 0.8f,
+                    ShakeDuration   = result.IsCritical ? 0.2f  : 0.15f,
+                    HitStopDuration = result.IsCritical ? 0.08f : 0.05f,
+                });
+            }
         }
     }
 }

@@ -42,8 +42,44 @@ namespace MMORPG.Game
 
         // ── Unity 생명주기 ────────────────────────────────────────────
 
-        private void OnEnable()  => PlayerRegistry.Register(this);
-        private void OnDisable() => PlayerRegistry.Unregister(this);
+        private void OnEnable()
+        {
+            PlayerRegistry.Register(this);
+            TargetingSystem.Instance.OnTargetChanged += OnTargetChanged;
+        }
+
+        private void OnDisable()
+        {
+            PlayerRegistry.Unregister(this);
+            TargetingSystem.Instance.OnTargetChanged -= OnTargetChanged;
+        }
+
+        private void OnTargetChanged(Character target)
+        {
+            if (target == null) return;
+
+            Vector3 dir = (target.transform.position - transform.position);
+            dir.y = 0f;
+            if (dir == Vector3.zero) return;
+
+            if (_lookRoutine != null) StopCoroutine(_lookRoutine);
+            _lookRoutine = StartCoroutine(LookAtRoutine(Quaternion.LookRotation(dir)));
+        }
+
+        private Coroutine _lookRoutine;
+
+        private System.Collections.IEnumerator LookAtRoutine(Quaternion targetRot)
+        {
+            while (Quaternion.Angle(transform.rotation, targetRot) > 0.5f)
+            {
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation, targetRot,
+                    _playerData.rotationSpeed * Time.deltaTime);
+                yield return null;
+            }
+            transform.rotation = targetRot;
+            _lookRoutine = null;
+        }
 
         private void Awake()
         {

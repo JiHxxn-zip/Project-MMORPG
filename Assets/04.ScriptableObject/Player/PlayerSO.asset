@@ -15,6 +15,6 @@ MonoBehaviour:
   characterName: Warrior
   stat: {fileID: 11400000, guid: 38c03938ed3195648a5a69435ab4b055, type: 2}
   attackRange: 0
-  rotationSpeed: 2
+  rotationSpeed: 10
   skills: []
   portrait: {fileID: 0}
