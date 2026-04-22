@@ -18,6 +18,7 @@ namespace MMORPG.Game
 
         public event Action<QuestSO> OnQuestAccepted;
         public event Action<QuestSO> OnQuestCompleted;
+        public event Action<QuestSO> OnQuestProgressUpdated;
 
         // ── 이벤트 버스 구독 ───────────────────────────────────────────
 
@@ -38,12 +39,13 @@ namespace MMORPG.Game
                     cond.currentCount += e.Value;
                     Debug.Log($"[QuestManager] 진행도: {quest.questId} | {cond.eventType}:{cond.targetId} → {cond.currentCount}/{cond.requiredCount}");
 
+                    OnQuestProgressUpdated?.Invoke(quest);
                     if (quest.IsAllMet) CompleteQuest(quest);
                 }
             }
         }
 
-        private IEnumerable<QuestSO> GetActiveQuests()
+        public IEnumerable<QuestSO> GetActiveQuests()
         {
             foreach (var quest in _questData.Values)
                 if (GetState(quest.questId) == QuestProgressState.Active)

@@ -181,6 +181,7 @@ namespace MMORPG.Game
             _panelCache.Clear();
             _panelStack.Clear();
             RefreshDisplaySize();
+            OpenPanel<LogoPanel>(UIPanelType.Logo);
         }
 
 #if UNITY_EDITOR
