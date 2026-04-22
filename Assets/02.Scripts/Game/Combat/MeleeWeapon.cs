@@ -53,6 +53,7 @@ namespace MMORPG.Game
 
             _hitBuffer.Add(other);
             _pipeline.Execute(_owner, defender, _owner.AttackPower, _damageType);
+            DisableHit();
         }
     }
 }

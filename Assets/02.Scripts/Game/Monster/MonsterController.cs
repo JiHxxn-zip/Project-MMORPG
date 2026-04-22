@@ -6,7 +6,7 @@ namespace MMORPG.Game
 {
     [RequireComponent(typeof(Character))]
     [RequireComponent(typeof(StatHandler))]
-    public class MonsterController : MonoBehaviour
+    public class MonsterController : MonoBehaviour, IInteractable
     {
         [SerializeField] private MonsterSO _data;
 
@@ -109,6 +109,15 @@ namespace MMORPG.Game
             });
 
             Destroy(gameObject, 2f);
+        }
+
+        // ── IInteractable ─────────────────────────────────────────────
+
+        public void OnInteract()
+        {
+            if (_state == State.Dead) return;
+
+            TargetingSystem.Instance.SetTarget(_character);
         }
 
         // ── 유틸 ──────────────────────────────────────────────────────

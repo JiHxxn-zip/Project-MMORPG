@@ -35,8 +35,10 @@ namespace MMORPG.Game
         public void SetVelocityY(float y) => _velocity.y = y;
 
         /// <summary>NPCRangeTrigger가 PlayerRegistry를 통해 호출한다. 실제 처리는 InteractionHandler에 위임.</summary>
-        public void SetCurrentNPC(NPCController npc) => _interactionHandler.SetCurrentNPC(npc);
-        public void ClearCurrentNPC()                => _interactionHandler.ClearCurrentNPC();
+        public void SetCurrentNPC(NPCController npc)          => _interactionHandler.SetCurrentNPC(npc);
+        public void ClearCurrentNPC()                          => _interactionHandler.ClearCurrentNPC();
+        public bool IsCurrentNPC(NPCController npc)            => _interactionHandler.IsCurrentNPC(npc);
+        public void StartInteraction(NPCController npc)        => _interactionHandler.StartInteraction(npc);
 
         // ── Unity 생명주기 ────────────────────────────────────────────
 

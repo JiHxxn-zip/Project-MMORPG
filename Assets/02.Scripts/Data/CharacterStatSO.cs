@@ -22,7 +22,5 @@ namespace MMORPG.Data
         [Header("이동")]
         public float moveSpeed;
 
-        [Header("경험치")]
-        public int expReward;
     }
 }

@@ -9,6 +9,9 @@ namespace MMORPG.Data
         public string          monsterName;
         public CharacterStatSO stat;
 
+        [Header("경험치")]
+        public int expReward;
+
         [Header("AI")]
         public float detectionRange = 8f;
         public float attackRange    = 2f;

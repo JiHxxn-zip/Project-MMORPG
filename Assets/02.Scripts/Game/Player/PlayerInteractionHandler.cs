@@ -20,6 +20,7 @@ namespace MMORPG.Game
 
         public void SetCurrentNPC(NPCController npc) => _currentNPC = npc;
         public void ClearCurrentNPC()                => _currentNPC = null;
+        public bool IsCurrentNPC(NPCController npc)  => _currentNPC == npc;
 
         // ── Unity 생명주기 ────────────────────────────────────────────────
 
@@ -52,7 +53,18 @@ namespace MMORPG.Game
             if (!Input.GetKeyDown(KeyCode.F)) return;
             if (_currentNPC == null) return;
 
-            _pendingContext = _currentNPC.GetInteractionContext();
+            StartInteraction(_currentNPC);
+        }
+
+        /// <summary>
+        /// NPC와 대화를 시작한다. F키 입력과 TouchDetector(OnInteract) 양쪽에서 호출된다.
+        /// </summary>
+        public void StartInteraction(NPCController npc)
+        {
+            if (_owner.StateMachine.CurrentState is PlayerInteractState) return;
+
+            _currentNPC     = npc;
+            _pendingContext = npc.GetInteractionContext();
             if (_pendingContext.dialogue == null) return;
 
             _activeDialoguePanel = UIManager.Instance.OpenPanel<DialoguePanel>(UIPanelType.Dialogue, PanelOpenFlag.KeepPrevious);

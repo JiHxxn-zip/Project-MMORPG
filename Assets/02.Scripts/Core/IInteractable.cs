@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace MMORPG.Core
 {
     /// <summary>
@@ -8,8 +6,6 @@ namespace MMORPG.Core
     /// </summary>
     public interface IInteractable
     {
-        /// <summary>상호작용을 실행한다.</summary>
-        /// <param name="interactor">상호작용을 시도한 주체 GameObject</param>
-        void Interact(GameObject interactor);
+        void OnInteract();
     }
 }

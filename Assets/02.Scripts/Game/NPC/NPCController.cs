@@ -8,13 +8,27 @@ using MMORPG.Data;
 
 namespace MMORPG.Game
 {
-    public class NPCController : MonoBehaviour
+    public class NPCController : MonoBehaviour, IInteractable
     {
         [SerializeField] private NPCSO _npcData;
         [SerializeField] private NPCInteractionIndicator _indicator;
 
         public NPCSO Data => _npcData;
         public NPCInteractionIndicator Indicator => _indicator;
+
+        // ── IInteractable ─────────────────────────────────────────────
+
+        public void OnInteract()
+        {
+            var player = PlayerRegistry.Player;
+            if (player == null) return;
+
+            // NPCRangeTrigger가 이미 범위 내 진입 시 SetCurrentNPC를 등록하므로
+            // 해당 NPC가 현재 플레이어의 상호작용 대상으로 등록된 경우에만 실행
+            if (!player.IsCurrentNPC(this)) return;
+
+            player.StartInteraction(this);
+        }
 
         /// <summary>
         /// 상호작용 시 재생할 대화와 퀘스트 액션을 반환한다.
