@@ -13,6 +13,12 @@ namespace MMORPG.Game
 
         public override void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StateMachine.ChangeState(new PlayerAttackState(StateMachine, 1));
+                return;
+            }
+
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
 
@@ -29,16 +35,19 @@ namespace MMORPG.Game
             camRight.y   = 0f; camRight.Normalize();
             Vector3 moveDir = (camForward * v + camRight * h).normalized;
 
+            bool isRunning = Input.GetKey(KeyCode.LeftShift);
+            float speedMult = isRunning ? 2.0f : 1.0f;
+
             // 이동
-            Owner.CC.Move(moveDir * Owner.Data.stat.moveSpeed * Time.deltaTime);
+            Owner.CC.Move(moveDir * Owner.Data.stat.moveSpeed * speedMult * Time.deltaTime);
 
             // 이동 방향으로 즉시 회전
             if (moveDir != Vector3.zero)
                 Owner.transform.rotation = Quaternion.LookRotation(moveDir);
 
-            // 애니메이터 속도 갱신
-            float speed = new Vector2(h, v).magnitude;
-            Owner.Animator.SetSpeed(speed);
+            // 애니메이터 속도 갱신 (Walk=0.5, Run=1.0)
+            float animSpeed = new Vector2(h, v).magnitude * (isRunning ? 1.0f : 0.5f);
+            Owner.Animator.SetSpeed(animSpeed);
         }
 
         public override void Exit()

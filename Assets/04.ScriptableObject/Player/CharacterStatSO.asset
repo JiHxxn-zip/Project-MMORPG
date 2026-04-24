@@ -18,5 +18,4 @@ MonoBehaviour:
   magicResist: 10
   luck: 10
   critMultiplier: 1.5
-  moveSpeed: 15
-  expReward: 0
+  moveSpeed: 4

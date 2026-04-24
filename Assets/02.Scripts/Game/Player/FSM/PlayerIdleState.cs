@@ -16,6 +16,12 @@ namespace MMORPG.Game
 
         public override void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StateMachine.ChangeState(new PlayerAttackState(StateMachine, 1));
+                return;
+            }
+
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
 
