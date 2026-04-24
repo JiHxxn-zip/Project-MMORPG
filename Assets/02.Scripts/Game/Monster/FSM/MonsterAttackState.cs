@@ -11,6 +11,7 @@ namespace MMORPG.Game
         public override void Enter()
         {
             _attackTimer = 0f;  // 진입 즉시 첫 공격
+            Owner.Animator.SetSpeed(0f);
         }
 
         public override void Update()
@@ -24,6 +25,7 @@ namespace MMORPG.Game
             if (_attackTimer > 0f) return;
 
             _attackTimer = Owner.Data.attackCooldown;
+            Owner.Animator.TriggerAttack();
             Owner.PerformAttack();
         }
 

@@ -8,7 +8,8 @@ namespace MMORPG.Game
     [RequireComponent(typeof(StatHandler))]
     public class MonsterController : MonoBehaviour, IInteractable
     {
-        [SerializeField] private MonsterSO _data;
+        [SerializeField] private MonsterSO       _data;
+        [SerializeField] private MonsterAnimator _animator;
 
         private Character           _character;
         private StatHandler         _statHandler;
@@ -16,8 +17,9 @@ namespace MMORPG.Game
         private MonsterStateMachine _stateMachine;
 
         // ── FSM이 읽는 프로퍼티 ───────────────────────────────────────
-        public MonsterSO  Data            => _data;
-        public Transform  PlayerTransform { get; private set; }
+        public MonsterSO       Data            => _data;
+        public MonsterAnimator Animator        => _animator;
+        public Transform       PlayerTransform { get; private set; }
 
         // ── Unity 생명주기 ────────────────────────────────────────────
 
@@ -107,7 +109,7 @@ namespace MMORPG.Game
         {
             if (_stateMachine.CurrentState is MonsterDeadState) return;
 
-            TargetingSystem.Instance.SetTarget(_character);
+            TargetingSystem.Instance?.SetTarget(_character);
         }
     }
 }

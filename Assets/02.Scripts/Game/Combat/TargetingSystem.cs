@@ -10,10 +10,14 @@ namespace MMORPG.Game
     public class TargetingSystem : MonoBehaviour
     {
         private static TargetingSystem _instance;
+        private static bool _isQuitting = false;
         public static TargetingSystem Instance
         {
             get
             {
+                // 앱 종료 중이면 새로 만들지 않음
+                if (_isQuitting) return null;
+
                 if (_instance == null)
                 {
                     var go = new GameObject(nameof(TargetingSystem));
@@ -22,6 +26,15 @@ namespace MMORPG.Game
                 }
                 return _instance;
             }
+        }
+        private void OnApplicationQuit()
+        {
+            _isQuitting = true;
+        }
+
+        private void OnDestroy()
+        {
+            _isQuitting = true;
         }
 
         public Character CurrentTarget { get; private set; }

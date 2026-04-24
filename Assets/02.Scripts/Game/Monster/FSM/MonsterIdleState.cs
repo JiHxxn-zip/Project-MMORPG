@@ -4,7 +4,10 @@ namespace MMORPG.Game
     {
         public MonsterIdleState(MonsterStateMachine sm) : base(sm) { }
 
-        public override void Enter() { }
+        public override void Enter()
+        {
+            Owner.Animator.SetSpeed(0f);
+        }
 
         public override void Update()
         {

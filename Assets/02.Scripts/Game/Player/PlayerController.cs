@@ -51,7 +51,8 @@ namespace MMORPG.Game
         private void OnDisable()
         {
             PlayerRegistry.Unregister(this);
-            TargetingSystem.Instance.OnTargetChanged -= OnTargetChanged;
+            if (TargetingSystem.Instance != null)
+                TargetingSystem.Instance.OnTargetChanged -= OnTargetChanged;
         }
 
         private void OnTargetChanged(Character target)

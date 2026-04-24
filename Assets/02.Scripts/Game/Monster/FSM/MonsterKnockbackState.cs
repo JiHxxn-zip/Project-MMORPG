@@ -20,6 +20,7 @@ namespace MMORPG.Game
         public override void Enter()
         {
             _elapsed = 0f;
+            Owner.Animator.TriggerTakeDamage();
         }
 
         public override void Update()
