@@ -15,6 +15,7 @@ namespace MMORPG.Game
         [SerializeField] private PlayerSO      _playerData;
         [SerializeField] private PlayerAnimator _animator;
         [SerializeField] private Transform     _cameraTransform;
+        [SerializeField] private MeleeWeapon  _meleeWeapon;
 
         private CharacterController      _cc;
         private PlayerStateMachine       _stateMachine;
@@ -28,6 +29,7 @@ namespace MMORPG.Game
         public CharacterController CC              => _cc;
         public Transform           CameraTransform => _cameraTransform;
         public bool                IsGrounded      => _cc.isGrounded;
+        public MeleeWeapon         MeleeWeapon     => _meleeWeapon;
 
         // ── 외부 제어 ─────────────────────────────────────────────────
 

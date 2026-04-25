@@ -4426,6 +4426,11 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8182191027991436636, guid: 2ef179985cef3fd4da5547dd4b47218f,
+        type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].cycleCount
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1477421138179278809, guid: 2ef179985cef3fd4da5547dd4b47218f, type: 3}
     - {fileID: 8490275341174252837, guid: 2ef179985cef3fd4da5547dd4b47218f, type: 3}

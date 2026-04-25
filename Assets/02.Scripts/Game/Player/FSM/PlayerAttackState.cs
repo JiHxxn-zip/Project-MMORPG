@@ -26,6 +26,8 @@ namespace MMORPG.Game
             _nextAttackQueued = false;
             _comboTimer       = COMBO_WINDOW;
             Owner.Animator.TriggerAttack(_comboIndex);
+            if (Owner.MeleeWeapon != null)
+                Owner.MeleeWeapon.CurrentComboIndex = _comboIndex;
         }
 
         public override void Update()

@@ -12,6 +12,9 @@ namespace MMORPG.Game
     public class MeleeWeapon : MonoBehaviour
     {
         [SerializeField] private DamageType _damageType = DamageType.Physical;
+        [SerializeField] private ParticleSystem _hitEffect3;   // 3타 히트 시 재생할 이펙트 (프리팹 내부에 장착)
+
+        public int CurrentComboIndex { get; set; }
 
         private Character          _owner;
         private bool               _isPlayerWeapon;
@@ -36,6 +39,7 @@ namespace MMORPG.Game
         {
             _hitBuffer.Clear();
             _col.enabled = true;
+            _hitEffect3?.Stop(withChildren: true, stopBehavior: ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
         public void DisableHit()
@@ -56,6 +60,14 @@ namespace MMORPG.Game
             _hitBuffer.Add(other);
             var result = _pipeline.Execute(_owner, defender, _owner.AttackPower, _damageType);
             DisableHit();
+
+            // 3타 이펙트 재생
+            if (CurrentComboIndex == 3 && _hitEffect3 != null)
+            {
+                _hitEffect3.gameObject.SetActive(false);
+                _hitEffect3.gameObject.SetActive(true);
+                _hitEffect3.Play(withChildren: true);
+            }
 
             if (_isPlayerWeapon)
             {

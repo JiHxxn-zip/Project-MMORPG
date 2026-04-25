@@ -10,6 +10,7 @@ namespace MMORPG.Game
     {
         [SerializeField] private MonsterSO       _data;
         [SerializeField] private MonsterAnimator _animator;
+        [SerializeField] private ParticleSystem  _hitEffect;
 
         private Character           _character;
         private StatHandler         _statHandler;
@@ -95,6 +96,12 @@ namespace MMORPG.Game
             // 이미 넉백/사망 중이면 무시
             if (_stateMachine.CurrentState is MonsterKnockbackState) return;
             if (_stateMachine.CurrentState is MonsterDeadState)       return;
+
+            if (_hitEffect != null)
+            {
+                _hitEffect.Stop(withChildren: true, stopBehavior: ParticleSystemStopBehavior.StopEmittingAndClear);
+                _hitEffect.Play(withChildren: true);
+            }
 
             Vector3 knockDir = PlayerTransform != null
                 ? (transform.position - PlayerTransform.position).normalized
