@@ -66,7 +66,7 @@ MMORPG는 몬스터, 스킬, 퀘스트, NPC, 대화 등 **수십~수백 개의 �
 
 ## ⚔️ 전투 파이프라인 (Pipeline Pattern)
 
-전투 데미지 처리를 **단일 함수에 몰아넣으면** 명중 판정·크리티컬·방어력·실드를 모두 `if`로 처리하게 되어 수정이 두려워집니다.  
+전투 데미지 처리를 **단일 함수에 몰아넣으면** 명중 판정, 크리티컬, 방어력, 실드를 모두 `if`로 처리하게 되어 수정이 두려워집니다.  
 이를 해결하기 위해 **Pipeline 패턴**을 도입했습니다.
 
 ### 데미지 흐름
@@ -102,13 +102,13 @@ AttackRequest
 **이 구조의 장점:**
 - 새로운 효과(흡혈, 반사 등)를 Processor 하나만 추가해 끼워 넣을 수 있습니다
 - 각 단계를 독립적으로 테스트할 수 있습니다
-- 기존 로직을 건드리지 않고 순서 변경·단계 추가·제거가 가능합니다
+- 기존 로직을 건드리지 않고 순서 변경/단계 추가/제거가 가능합니다
 
 ---
 
 ## 📬 퀘스트 이벤트 버스 (Event Bus Pattern)
 
-퀘스트 시스템이 전투·인벤토리·대화 시스템을 직접 참조하면 **강한 결합**이 생깁니다.  
+퀘스트 시스템이 전투/인벤토리/대화 시스템을 직접 참조하면 **강한 결합**이 생깁니다.  
 몬스터가 죽을 때 `QuestManager.AddProgress()` 를 직접 호출하는 구조는 Combat이 Quest를 알아야 하므로 레이어 원칙을 위반합니다.
 
 ### 해결: Event Bus로 결합 끊기
@@ -173,24 +173,7 @@ Assets/
 
 ---
 
-## 🔧 구현 현황
-
-- [x] Assembly Definition 레이어 분리 (Core / Data / Game)
-- [x] Core 레이어 인터페이스 / Enum 정의
-- [x] Data 레이어 ScriptableObject 설계
-- [x] Addressables 키 네이밍 규칙 정립
-- [x] 전투 데미지 파이프라인 (7단계 Processor)
-- [x] 퀘스트 이벤트 버스 구조 (5단계 Phase 적용)
-- [x] NPC 대화 시스템 (DialogueSO 체인, 퀘스트 상태 분기)
-- [ ] PlayerController (이동 + 기본 공격 + 스킬)
-- [ ] 퀘스트 트래커 UI
-
----
-
 ## 💡 설계 과정에서 고민한 것들
-
-**"SO에 진행도를 저장하면 안 될까?"**  
-SO는 에셋이므로 런타임 변경이 에디터 상태에 영향을 줍니다. 세이브/로드도 불가능합니다. → JSON으로 분리.
 
 **"QuestManager가 직접 Monster 이벤트를 받으면 안 될까?"**  
 그러면 QuestManager가 CombatSystem을 알아야 하고, 레이어 의존이 역전됩니다. → EventBus로 간접 연결.
@@ -202,7 +185,6 @@ SO는 에셋이므로 런타임 변경이 에디터 상태에 영향을 줍니�
 
 ## 📎 참고 문서
 
-- [CLAUDE.md](./CLAUDE.md) — 전체 아키텍처 규칙 및 코딩 컨벤션
 - [step-combat_pipeline.md](./step-combat_pipeline.md) — 전투 파이프라인 설계 명세
 - [step-quest_eventbus.md](./step-quest_eventbus.md) — 퀘스트 이벤트 버스 설계 명세
 - [step-player-fsm.md](./step-player-fsm.md) — 플레이어 FSM 설계 명세
