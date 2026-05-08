@@ -17,6 +17,14 @@
 단순한 기능 구현에 그치지 않고, **"왜 이 구조를 선택했는가"** 를 스스로 질문하며 설계 결정을 내린 프로젝트입니다.  
 ScriptableObject를 통한 데이터 관리, Pipeline 패턴 기반 전투 처리, EventBus 기반 퀘스트 진행 등 실무에서 쓰이는 아키텍처 패턴을 직접 고민하고 적용했습니다.
 
+🎮 스크린샷
+<p align="center">
+  <img src="docs/MonsterAttack.PNG" width="49%"/>
+  <img src="docs/swordTrail.PNG" width="49%"/>
+</p>
+<p align="center">
+  <img src="docs/QuestUI.PNG" width="80%"/>
+</p>
 ---
 
 ## 🏗️ 레이어 아키텍처
