@@ -19,7 +19,7 @@ ScriptableObject를 통한 데이터 관리, Pipeline 패턴 기반 전투 처�
 
 ---
 
-🎮 스크린샷
+## 🎮 스크린샷
 <p align="center">
   <img src="docs/MonsterAttack.PNG" width="49%"/>
   <img src="docs/swordTrail.PNG" width="49%"/>
