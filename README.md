@@ -201,3 +201,6 @@ Assets/
 - [step-player-fsm.md](./step-player-fsm.md) — 플레이어 FSM 설계 명세
 - [step-npc-dialogue.md](./step-npc-dialogue.md) — NPC 대화 시스템 설계 명세
 - [step-ui-manager.md](./step-ui-manager.md) — UI 매니저 설계 명세
+
+---
+
