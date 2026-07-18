@@ -17,25 +17,25 @@
 AttackRequest
     │
     ▼
-\[1. HitCheckProcessor]          → 명중/회피 판정
+[1. HitCheckProcessor]          → 명중/회피 판정
     │
     ▼
-\[2. CriticalCheckProcessor]     → 크리티컬 판정
+[2. CriticalCheckProcessor]     → 크리티컬 판정
     │
     ▼
-\[3. DamageCalculateProcessor]   → 기본 데미지 + 속성 저항 계산
+[3. DamageCalculateProcessor]   → 기본 데미지 + 속성 저항 계산
     │
     ▼
-\[4. MitigationProcessor]        → 방어력 적용 (고정 피해는 무시)
+[4. MitigationProcessor]        → 방어력 적용 (고정 피해는 무시)
     │
     ▼
-\[5. ShieldProcessor]            → 실드 처리
+[5. ShieldProcessor]            → 실드 처리
     │
     ▼
-\[6. HealthReduceProcessor]      → 실제 HP 차감
+[6. HealthReduceProcessor]      → 실제 HP 차감
     │
     ▼
-\[7. EventDispatchProcessor]     → EventBus로 결과 발행
+[7. EventDispatchProcessor]     → EventBus로 결과 발행
 ```
 
 ---
@@ -206,7 +206,7 @@ public enum DamageType
 
 ---
 
-## 파일 구조 (권장)
+## 파일 구조
 
 ```
 Scripts/
