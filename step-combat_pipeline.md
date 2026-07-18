@@ -38,7 +38,7 @@ AttackRequest
 \[7. EventDispatchProcessor]     → EventBus로 결과 발행
 ```
 
-\---
+---
 
 ## 구현 명세
 
@@ -67,7 +67,7 @@ public class DamageContext
 }
 ```
 
-\---
+---
 
 ### IDamageProcessor
 
@@ -80,7 +80,7 @@ public interface IDamageProcessor
 }
 ```
 
-\---
+---
 
 ### 각 Processor 구현 요구사항
 
@@ -121,7 +121,7 @@ public interface IDamageProcessor
 * 기존 EventBus에 `DamageTakenEvent` 발행
 * 이벤트에 포함할 데이터: `Defender`, `FinalDamage`, `IsCritical`, `IsHit`
 
-\---
+---
 
 ### DamagePipeline
 
@@ -165,7 +165,7 @@ public class DamagePipeline
 }
 ```
 
-\---
+---
 
 ### 호출부 예시 (AttackHandler)
 
@@ -191,7 +191,7 @@ public class AttackHandler : MonoBehaviour
 }
 ```
 
-\---
+---
 
 ## DamageType 열거형
 
@@ -204,7 +204,7 @@ public enum DamageType
 }
 ```
 
-\---
+---
 
 ## 파일 구조 (권장)
 
@@ -226,7 +226,7 @@ Scripts/
         └── EventDispatchProcessor.cs
 ```
 
-\---
+---
 
 ## 기존 시스템과의 연결 규칙
 
