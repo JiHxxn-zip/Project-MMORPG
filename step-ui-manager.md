@@ -288,6 +288,3 @@ public abstract class SingletonManager<T> : MonoBehaviour where T : MonoBehaviou
 7. TryGetOrCreate에서 캐시 히트 시 Instantiate가 발생하지 않을 것
 8. Unity Editor에서 컴파일 에러가 없을 것
 9. 각 파일 상단에 XML 주석이 있을 것
-
-완료 후 UIManager의 전체 public 인터페이스와
-각 PanelOpenFlag 조합 사용 예시를 요약해줘.
