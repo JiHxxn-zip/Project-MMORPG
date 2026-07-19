@@ -351,5 +351,3 @@ private void OnDialogueEnded():
 8. 대화 종료 시 PlayerController가 Idle 상태로 복귀할 것
 9. NPCController 범위 감지에 Physics.OverlapSphere 또는 OnTriggerEnter 미사용
    (Update에서 거리 계산 방식 유지)
-10. Unity Editor에서 컴파일 에러가 없을 것
-11. 각 파일 상단에 XML 주석으로 역할 설명이 있을 것
