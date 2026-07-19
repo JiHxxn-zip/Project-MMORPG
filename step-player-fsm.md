@@ -279,6 +279,3 @@ public float rotationSpeed = 10f;   // 캐릭터 회전 속도
 8. PlayerSO.rotationSpeed가 회전에 실제로 사용될 것
 9. Unity Editor에서 컴파일 에러가 없을 것
 10. 각 파일 상단에 XML 주석으로 역할 설명이 있을 것
-
-완료 후 FSM 상태 전환 흐름도와
-PlayerController의 public 인터페이스를 요약해줘.
