@@ -353,6 +353,3 @@ private void OnDialogueEnded():
    (Update에서 거리 계산 방식 유지)
 10. Unity Editor에서 컴파일 에러가 없을 것
 11. 각 파일 상단에 XML 주석으로 역할 설명이 있을 것
-
-완료 후 MVP 각 레이어의 역할과
-전체 대화 흐름(NPC 접근 → 대화 시작 → 종료)을 요약해줘.
