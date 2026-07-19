@@ -286,5 +286,3 @@ public abstract class SingletonManager<T> : MonoBehaviour where T : MonoBehaviou
 5. PanelOpenFlag 비트 조합이 정상 동작할 것
 6. AlwaysOnTop 패널이 _panelStack에 포함되지 않을 것
 7. TryGetOrCreate에서 캐시 히트 시 Instantiate가 발생하지 않을 것
-8. Unity Editor에서 컴파일 에러가 없을 것
-9. 각 파일 상단에 XML 주석이 있을 것
