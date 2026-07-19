@@ -2,7 +2,7 @@
 
 CLAUDE.md의 레이어 구조와 코딩 컨벤션을 참고해서
 UIManager 시스템을 구현해줘.
-네임스페이스는 MMORPG (MabiLike 아님).
+네임스페이스는 MMORPG.
 
 ---
 
