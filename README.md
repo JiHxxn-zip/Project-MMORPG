@@ -202,5 +202,3 @@ Assets/
 - [step-npc-dialogue.md](./step-npc-dialogue.md) — NPC 대화 시스템 설계 명세
 - [step-ui-manager.md](./step-ui-manager.md) — UI 매니저 설계 명세
 
----
-
